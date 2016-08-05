@@ -3,7 +3,18 @@
 namespace plazy\sequence;
 
 use plazy\data\Option;
+use plazy\func\Filter;
+use plazy\func\Mapper;
 
+/**
+ * The sequence class allows you to build up a computation out of smaller operations. It's similar to Java 8
+ * Streams.<br> Usages:
+ * <code>
+ * Sequence::sequence(1,2,3);
+ * </code>
+ *
+ * @package plazy\sequence
+ */
 class Sequence implements \Iterator, \ArrayAccess
 {
     /**
@@ -16,12 +27,30 @@ class Sequence implements \Iterator, \ArrayAccess
      */
     private $values = array();
 
-    private function __construct( ...$values )
+    /**
+     * Sequence constructor.
+     *
+     * @param array $values
+     */
+    private function __construct( array $values )
     {
         $this->values = $values;
     }
 
+    /**
+     * @param array ...$values
+     * @return Sequence
+     */
     public static function sequence( ...$values ):Sequence
+    {
+        return new Sequence( $values );
+    }
+
+    /**
+     * @param array $values
+     * @return Sequence
+     */
+    public static function sequenceFromPHPArray( array $values ):Sequence
     {
         return new Sequence( $values );
     }
@@ -32,7 +61,7 @@ class Sequence implements \Iterator, \ArrayAccess
      */
     public function take( int $number ):Sequence
     {
-        return Sequence::sequence( array_slice( $this->values, 0, $number ) );
+        return Sequence::sequenceFromPHPArray( array_slice( $this->values, 0, $number ) );
     }
 
     /**
@@ -41,7 +70,7 @@ class Sequence implements \Iterator, \ArrayAccess
      */
     public function drop( int $number ):Sequence
     {
-        return Sequence::sequence( array_slice( $this->values, $number ) );
+        return Sequence::sequenceFromPHPArray( array_slice( $this->values, $number ) );
     }
 
     /**
@@ -49,7 +78,7 @@ class Sequence implements \Iterator, \ArrayAccess
      */
     public function tail():Sequence
     {
-        return Sequence::drop( 1 );
+        return Sequence::sequenceFromPHPArray( $this->values )->drop( 1 );
     }
 
     /**
@@ -61,9 +90,9 @@ class Sequence implements \Iterator, \ArrayAccess
     }
 
     /**
-     * @return Sequence
+     * @return Option
      */
-    public function headOption():Sequence
+    public function headOption():Option
     {
         return Option::fromNull( $this->values[0] );
     }
@@ -134,23 +163,30 @@ class Sequence implements \Iterator, \ArrayAccess
      * current value from {@link Sequence} is returned into
      * the result {@link Sequence}.
      *
-     * @param callable $function
+     * @param Filter $function
      * @return Sequence
      */
-    public function filter( callable $function ):Sequence
+    public function filter( Filter $function ):Sequence
     {
-        return Sequence::sequence( array_filter( $this->values, $function ) );
+        return Sequence::sequenceFromPHPArray(
+            array_values(
+                array_filter(
+                    $this->values,
+                    array($function, 'filter')
+                )
+            )
+        );
     }
 
     /**
      * Applies the <b>function</b> to the elements of the {@link Sequence}.
      *
-     * @param callable $function
+     * @param Mapper $function
      * @return Sequence
      */
-    public function map( callable $function ):Sequence
+    public function map( Mapper $function ):Sequence
     {
-        return Sequence::sequence( array_map( $function, $this->values ) );
+        return Sequence::sequenceFromPHPArray( array_map( array( $function, 'map' ), $this->values ) );
     }
 
     /**
@@ -202,7 +238,7 @@ class Sequence implements \Iterator, \ArrayAccess
         $values = $this->values;
         $values[] = $appendable;
 
-        return Sequence::sequence( $values );
+        return Sequence::sequenceFromPHPArray( $values );
     }
 
     /**
@@ -215,7 +251,7 @@ class Sequence implements \Iterator, \ArrayAccess
         $pos = array_search( $value, $values );
         unset( $values[$pos] );
 
-        return Sequence::sequence( $values );
+        return Sequence::sequenceFromPHPArray( $values );
     }
 
     /**
@@ -343,5 +379,13 @@ class Sequence implements \Iterator, \ArrayAccess
     public function offsetUnset( $offset )
     {
         unset( $this->values[$offset] );
+    }
+
+    /**
+     * @return array
+     */
+    public function toPHPArray()
+    {
+        return $this->values;
     }
 }
