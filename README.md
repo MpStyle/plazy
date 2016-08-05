@@ -1,4 +1,5 @@
 # plazy
+Another functional library for PHP 7.
 
 ## Quickstart
 
