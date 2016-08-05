@@ -1,0 +1,26 @@
+{
+  "name": "mpstyle/plazy",
+  "description": "Lazy data access library",
+  "minimum-stability": "dev",
+  "license": "LGPL v3",
+  "authors": [
+    {
+      "name": "Michele Pagnin",
+      "email": "pagnin.michele@gmail.com"
+    }
+  ],
+  "autoload": {
+    "psr-4": {
+      "plazy\\": [
+        "src/main/php",
+        "src/test/php"
+      ]
+    }
+  },
+  "require-dev": {
+    "phpunit/phpunit": "5.5.*"
+  },
+  "scripts": {
+    "phptest": "php vendor/bin/phpunit src/test/php"
+  }
+}
