@@ -10,6 +10,11 @@ To use _plazy_ in your projects install _composer_ and add to your _composer.jso
 }
 ```
 
+Or run:
+```
+composer require "mpstyle/plazy"
+```
+
 ## Sequence
 The sequence class allows you to build up a computation out of smaller operations. It's similar to Java 8 Streams
 
