@@ -6,7 +6,7 @@ Another functional library for PHP 7.
 To use _plazy_ in your projects install _composer_ and add to your _composer.json_ file:
 ```json
 "require": {
-    "mpstyle/plazy": "0.1.*"
+    "mpstyle/plazy": "0.2.2"
 }
 ```
 

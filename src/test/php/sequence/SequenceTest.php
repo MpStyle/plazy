@@ -2,12 +2,14 @@
 
 namespace plazy\sequence;
 
+use plazy\func\Predicate;
+
 class SequenceTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @var array
      */
-    private $testArray = array( 1, 2, 3 );
+    private $testArray = array(1, 2, 3);
 
     public function test_sequence()
     {
@@ -73,14 +75,14 @@ class SequenceTest extends \PHPUnit_Framework_TestCase
     {
         $array = Sequence::sequenceFromPHPArray( $this->testArray )->filter( new Mod2Filter() )->toPHPArray();
 
-        $this->assertEquals( array( 1, 3 ), $array );
+        $this->assertEquals( array(1, 3), $array );
     }
 
     public function test_map()
     {
         $array = Sequence::sequenceFromPHPArray( $this->testArray )->map( new ToStringMapper() )->toPHPArray();
 
-        $this->assertEquals( array( '1', '2', '3' ), $array );
+        $this->assertEquals( array('1', '2', '3'), $array );
     }
 
     public function test_first()
@@ -116,5 +118,43 @@ class SequenceTest extends \PHPUnit_Framework_TestCase
     public function test_delete()
     {
         $this->assertEquals( $this->testArray, Sequence::sequence( 1, 2, 3, 4 )->delete( 4 )->toPHPArray() );
+    }
+
+    public function test_forAll()
+    {
+        $copy = new class(Sequence::sequence()) implements Predicate
+        {
+            /**
+             * @var Sequence
+             */
+            private $a;
+
+            public function __construct( Sequence $a )
+            {
+                $this->a = $a;
+            }
+
+            /**
+             * @param mixed $value
+             * @return bool
+             */
+            public function matches( $value ):bool
+            {
+                $this->a = $this->a->appendTo( $value * $value );
+                return true;
+            }
+
+            /**
+             * @return Sequence
+             */
+            public function getA(): Sequence
+            {
+                return $this->a;
+            }
+        };
+
+        Sequence::sequenceFromPHPArray( $this->testArray )->forAll( $copy );
+
+        $this->assertEquals( array(1, 4, 9), $copy->getA()->toPHPArray() );
     }
 }
