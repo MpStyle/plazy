@@ -1,7 +1,7 @@
 {
   "name": "mpstyle/plazy",
   "description": "Lazy data access library",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "minimum-stability": "dev",
   "license": "LGPL v3",
   "authors": [
