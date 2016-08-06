@@ -3,8 +3,8 @@
 namespace plazy\sequence;
 
 use plazy\data\Option;
-use plazy\func\Filter;
-use plazy\func\Mapper;
+use plazy\func\Predicate;
+use plazy\func\F;
 
 /**
  * The sequence class allows you to build up a computation out of smaller operations. It's similar to Java 8
@@ -163,16 +163,16 @@ class Sequence implements \Iterator, \ArrayAccess
      * current value from {@link Sequence} is returned into
      * the result {@link Sequence}.
      *
-     * @param Filter $function
+     * @param Predicate $function
      * @return Sequence
      */
-    public function filter( Filter $function ):Sequence
+    public function filter( Predicate $function ):Sequence
     {
         return Sequence::sequenceFromPHPArray(
             array_values(
                 array_filter(
                     $this->values,
-                    array($function, 'filter')
+                    array($function, 'matches')
                 )
             )
         );
@@ -181,12 +181,12 @@ class Sequence implements \Iterator, \ArrayAccess
     /**
      * Applies the <b>function</b> to the elements of the {@link Sequence}.
      *
-     * @param Mapper $function
+     * @param F $function
      * @return Sequence
      */
-    public function map( Mapper $function ):Sequence
+    public function map( F $function ):Sequence
     {
-        return Sequence::sequenceFromPHPArray( array_map( array( $function, 'map' ), $this->values ) );
+        return Sequence::sequenceFromPHPArray( array_map( array( $function, 'f'), $this->values ) );
     }
 
     /**

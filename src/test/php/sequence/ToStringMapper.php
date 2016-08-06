@@ -2,16 +2,16 @@
 
 namespace plazy\sequence;
 
-use plazy\func\Mapper;
+use plazy\func\F;
 
-class ToStringMapper implements Mapper
+class ToStringMapper implements F
 {
 
     /**
      * @param mixed $value
      * @return mixed
      */
-    public function map( $value )
+    public function f( $value )
     {
         return '' . $value;
     }

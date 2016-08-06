@@ -2,11 +2,11 @@
 
 namespace plazy\sequence;
 
-use plazy\func\Filter;
+use plazy\func\Predicate;
 
-class Mod2Filter implements Filter
+class Mod2Filter implements Predicate
 {
-    public function filter($value):bool
+    public function matches( $value):bool
     {
         return ( $value % 2 == 1 );
     }

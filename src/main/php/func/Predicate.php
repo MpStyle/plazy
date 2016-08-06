@@ -1,11 +1,11 @@
 <?php
 namespace plazy\func;
 
-interface Filter
+interface Predicate
 {
     /**
      * @param mixed $value
      * @return bool
      */
-    public function filter($value):bool;
+    public function matches( $value):bool;
 }

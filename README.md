@@ -29,6 +29,13 @@ Sequence::sequence(1, 2, 3)->toString(":"); // eagerly returns "1:2:3"
 ## Option
 Optional value - type-safe null
 
+## Functions
+plazy provides some interfaces for functional uages, such as:
+
+- F: to transform an object to another one.
+- Predicate: to filter/select/match an object.
+- Validator: to validate an object.
+
 ## Developers
 
 To run unit test, run in the root of the plazy project:
